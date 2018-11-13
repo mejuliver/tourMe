@@ -1,30 +1,3 @@
-body{
-  background: #FFF;
-  font-family: Open Sans, 'Open Sans', Roboto, Raleway, sans-serif;
-  font-size: 14px;
-  color:#242424;
-  padding: 64px;
-}
-div#search{
-  border:1px solid #ccc;
-  padding: 44px;
-  height: 400px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-}
-input{
-  padding: 10px;
-  border:1px solid #ededed;
-  background: #FFF;
-  box-shadow: 0 10px 40px -6px rgba(0, 0, 0, 0.1);
-  width: 350px;
-}
-input.active{
-  transition: transform 300ms ease-in-out;
-  transform: scale(1.15);
-}
 #tourme-buttons{
   margin-top: 8px;
 }
