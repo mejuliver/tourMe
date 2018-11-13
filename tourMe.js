@@ -8,12 +8,6 @@ function tourMe(){
       
     var $els = document.querySelectorAll('[data-tourme-seq]');
 
-    if( $els.length == 0 ){
-      return;
-    }
-
-    if( $els == null )
-
     for( var $i = 0; $i < $els.length; $i++ ){
       //generate a unique id
       var $id = $i+'_'+this.generateUID();
