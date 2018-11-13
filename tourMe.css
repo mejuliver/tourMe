@@ -52,6 +52,7 @@
   height: 100vh;
 }
 #tourme-content{
+  display: none;
   position: absolute;
   z-index: 99999;
   border: 1px solid #ededed;
@@ -59,7 +60,6 @@
   width: 300px;
   padding: 24px;
   box-shadow: 0 10px 40px -6px rgba(0, 0, 0, 0.1);
-  display:block;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -o-border-radius: 3px;
