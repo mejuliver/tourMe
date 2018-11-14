@@ -32,4 +32,10 @@ You can also addjust the generated top and left offset by adding 'data-tourme-to
 <div id="custom-container">Hi, I am presenation from a custom container</div>
 ```
 
-By default, each active presentation origin element will be added a class of 'tourme-pointer', you can override this styling if you wished to.
+By default, each active presentation origin element will be added a class of 'tourme-pointer', you can override this styling if you wish to.
+
+By default it will only show one time but if you wish to show it every time then, add false to intializition of the plugin
+```
+var $tour = new tourMe();
+$tour.start(false); <-- set to false
+```

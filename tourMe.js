@@ -1,12 +1,28 @@
 function tourMe(){
-
+  var $global = this;
   this.$arr = [];
 
-  var $global = this;
-
-  this.start = function($options){
-
+  this.start = function($onetime){
     var $els = document.querySelectorAll('[data-tourme-seq]');
+
+    if( typeof $onetime != typeof undefined ){
+      if( $onetime == true){
+        if( this.getCookie('tourmecookie_id')){
+          return;
+        }else{
+           this.setCookie('tourmecookie_id','one time only',365);
+        }
+      }else{
+        this.setCookie('tourmecookie_id','one time only',-665);
+      }
+    }else{
+      if( this.getCookie('tourmecookie_id')){
+        return;
+      }else{
+         this.setCookie('tourmecookie_id','one time only',365);
+         this.getCookie('tourmecookie_id');
+      }
+    }
 
     for( var $i = 0; $i < $els.length; $i++ ){
       //generate a unique id
@@ -58,6 +74,33 @@ function tourMe(){
 
     this.init();
 
+  }
+  // COOKIE
+  this.setCookie = function(name,value,days) {
+      if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + (days * 24 * 60 * 60 *1000));
+          var expires = "; expires=" + date.toGMTString();
+      }
+      else {
+          var expires = "";
+      }
+      document.cookie = name + "=" + value + expires + "; path=/";
+  }
+  this.getCookie = function(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+          }
+      }
+      return false;
   }
   this.scrollToEl = function(el){
     const y = ( el.getBoundingClientRect().top + window.scrollY ) - 100;
