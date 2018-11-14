@@ -254,6 +254,9 @@ function tourMe(){
         document.querySelector('#tourme-data').value = JSON.stringify($data);
 
       }else{
+        if( document.querySelector('.tourme-pointer') !== null ){
+           document.querySelector('.tourme-pointer').classList.remove('tourme-pointer');
+        }
         var $tourme_bg_el = document.querySelector('#tourme-bg');
         $tourme_bg_el.parentNode.removeChild($tourme_bg_el);
         var $tourme_content_el = document.querySelector('#tourme-content');
