@@ -25,3 +25,11 @@ You can also bind a custom container by adding 'data-tourme-anchor' attribute e.
 <div data-tourme-seq="4" data-tourme-anchor="#custom-container">Fourth</div>
 <div id="custom-container">Hi, I am presenation from a custom container</div>
 ```
+
+You can also addjust the generated top and left offset by adding 'data-tourme-top', 'data-tourme-left' attribute(s), whatever the value will be appended to the generated offset value (top|left). Negative values ( ex: -65) will be automatically treated as a reduce value to the generated offset values
+```
+<div data-tourme-seq="4" data-tourme-top="78" data-tourme-left="-56" data-tourme-anchor="#custom-container">Fourth</div>
+<div id="custom-container">Hi, I am presenation from a custom container</div>
+```
+
+By default, each active presentation origin element will be added a class of 'tourme-pointer', you can override this styling if you wished to.

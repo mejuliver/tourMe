@@ -65,3 +65,13 @@
   -o-border-radius: 3px;
   border-radius: 3px;
 }
+.tourme-pointer {
+  animation: blinker 1s linear infinite;
+  border: 1px solid transparent;
+}
+
+@keyframes blinker {
+  50% {
+    border-color: red;
+  }
+}
