@@ -4,7 +4,7 @@ function tourMe(){
 
   this.start = function($onetime){
     var $els = document.querySelectorAll('[data-tourme-seq]');
-
+    console.log(this.getCookie('tourmecookie_id'));
     if( typeof $onetime != typeof undefined ){
       if( $onetime == true){
         if( this.getCookie('tourmecookie_id')){
