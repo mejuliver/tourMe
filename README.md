@@ -34,8 +34,8 @@ You can also addjust the generated top and left offset by adding 'data-tourme-to
 
 By default, each active presentation origin element will be added a class of 'tourme-pointer', you can override this styling if you wish to.
 
-By default it will only show one time but if you wish to show it every time then, add false to intializition of the plugin
+By default, it will show every time but you can set the iteration count
 ```
 var $tour = new tourMe();
-$tour.start(false); <-- set to false
+$tour.start(<interation count>); <-- 0 means show everytime or the counter will reset
 ```

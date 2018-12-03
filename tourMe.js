@@ -2,25 +2,26 @@ function tourMe(){
   var $global = this;
   this.$arr = [];
 
-  this.start = function($onetime){
+  this.start = function($duration){
     var $els = document.querySelectorAll('[data-tourme-seq]');
-    console.log(this.getCookie('tourmecookie_id'));
-    if( typeof $onetime != typeof undefined ){
-      if( $onetime == true){
-        if( this.getCookie('tourmecookie_id')){
-          return;
-        }else{
-           this.setCookie('tourmecookie_id','one time only',365);
+    if( typeof $duration != typeof undefined ){
+      if( $duration == 0){
+        this.setCookie('tourmecookie_id',0,-665);
+      }else{
+        // get the tourme cookie first
+        var $tourme_ck = this.getCookie('tourmecookie_id');
+        if( !$tourme_ck ){ // if not found then reset it since an iteration value was given          
+          this.setCookie('tourmecookie_id',parseInt($duration),365);
+        }else{ // if there is then check the duration value and compare to the cookie
+          if( parseInt( $tourme_ck ) == 0 ){
+            return; // if same to duration then it means, iteration count must be reset, or if its 0 already then return, don't run
+          }else{
+            var $tourme_val = parseInt( $tourme_ck ) - 1; // minus 1
+            // update the value tourme cookie value
+            this.setCookie('tourmecookie_id',$tourme_val,365);
+          }
         }
-      }else{
-        this.setCookie('tourmecookie_id','one time only',-665);
-      }
-    }else{
-      if( this.getCookie('tourmecookie_id')){
-        return;
-      }else{
-         this.setCookie('tourmecookie_id','one time only',365);
-         this.getCookie('tourmecookie_id');
+        
       }
     }
 
@@ -69,7 +70,7 @@ function tourMe(){
     $tourme_content.setAttribute('id','tourme-content');
 
     $data = JSON.stringify(this.$arr);
-    $tourme_content.innerHTML = "<div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Next</a><a href='#' id='tourme-button-end'>End</a></div>";
+    $tourme_content.innerHTML = "<div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div>";
     document.querySelector('body').appendChild($tourme_content);
 
     this.init();
