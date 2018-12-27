@@ -8,7 +8,7 @@ function tourMe(){
 
     if( typeof $options != 'undefined'){
       $duration = $options.repeat;
-      $arrow = $options.arrow;
+      $arrow = ( screen.width > 768 ) ? $options.arrow : false;
     }
 
     var $els = document.querySelectorAll('[data-tourme-seq]');
@@ -45,6 +45,7 @@ function tourMe(){
       var $top = ( $els[$i].getAttribute('data-tourme-top') == null ) ? false : $els[$i].getAttribute('data-tourme-top');
       var $left = ( $els[$i].getAttribute('data-tourme-left') == null ) ? false : $els[$i].getAttribute('data-tourme-left');
       var $arrow_pos = ( $els[$i].getAttribute('data-tourme-arrow') == null ) ? false : $els[$i].getAttribute('data-tourme-arrow');
+
       //
       this.$arr.push({ 
         id : $id,
@@ -83,7 +84,7 @@ function tourMe(){
       $tourme_content.classList.add('with-arrow');
       $tourme_content.innerHTML = "<div class='tourme-content-wrapper'><div class='tourme-arrow'></div><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div></div></div>";
     }else{
-      $tourme_content.innerHTML = "<div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div>";
+      $tourme_content.innerHTML = "div class='tourme-content-wrapper'><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div></div></div>";
     }
     document.querySelector('body').appendChild($tourme_content);
 
@@ -180,7 +181,7 @@ function tourMe(){
 
         // add offset top of the element so it moves to its origin element
         // add top css
-        if( !$data[$curr_active-1].top ){
+        if( !$data[$curr_active-1].top || screen.width < 768 ){
           document.querySelector('#tourme-content').style.top = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top + 'px';
         }else{
           if( $data[$curr_active-1].top.indexOf('-') == -1){
@@ -190,7 +191,7 @@ function tourMe(){
           }
         }
         // add left css
-        if( !$data[$curr_active-1].left ){
+        if( !$data[$curr_active-1].left || screen.width < 768 ){
           document.querySelector('#tourme-content').style.left = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left + 'px';
         }else{
           if( $data[$curr_active-1].left.indexOf('-') == -1){
@@ -264,7 +265,7 @@ function tourMe(){
 
         // add offset top of the element so it moves to its origin element
         // add top css
-        if( !$data[$curr_active+1].top ){
+        if( !$data[$curr_active+1].top || screen.width < 768 ){
           document.querySelector('#tourme-content').style.top = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top + 'px';
         }else{
           if( $data[$curr_active+1].top.indexOf('-') == -1){
@@ -274,7 +275,7 @@ function tourMe(){
           }
         }
         // add left css
-        if( !$data[$curr_active+1].left ){
+        if( !$data[$curr_active+1].left || screen.width < 768 ){
           document.querySelector('#tourme-content').style.left = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left + 'px';
         }else{
           if( $data[$curr_active+1].left.indexOf('-') == -1){
@@ -327,7 +328,7 @@ function tourMe(){
 
     // add offset top of the element so it moves to its origin element
     // add top css
-    if( !$data[0].top ){
+    if( !$data[0].top || screen.width < 768 ){
       document.querySelector('#tourme-content').style.top = this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top + 'px';
     }else{
       if( $data[0].top.indexOf('-') == -1){
@@ -337,7 +338,7 @@ function tourMe(){
       }
     }
     // add left css
-    if( !$data[0].left ){
+    if( !$data[0].left || screen.width < 768 ){
       document.querySelector('#tourme-content').style.left = this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left + 'px';
     }else{
       if( $data[0].left.indexOf('-') == -1){
@@ -401,6 +402,26 @@ function tourMe(){
      
     return id;
   } // end of generateID
+
+  this.elInViewport = function( el ) {
+    var top = el.offsetTop;
+    var left = el.offsetLeft;
+    var width = el.offsetWidth;
+    var height = el.offsetHeight;
+
+    while(el.offsetParent) {
+      el = el.offsetParent;
+      top += el.offsetTop;
+      left += el.offsetLeft;
+    }
+
+    return (
+      top >= window.pageYOffset &&
+      left >= window.pageXOffset &&
+      (top + height) <= (window.pageYOffset + window.innerHeight) &&
+      (left + width) <= (window.pageXOffset + window.innerWidth)
+    );
+  }
 } // end of tourme function
 
   
