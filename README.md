@@ -9,7 +9,10 @@ then initialize the plugin
 
 ```
 var $tour = new tourMe();
-$tour.start();
+$tour.start({
+	duration : 5,
+	arrow : true
+});
 ```
 
 but first, you should set up your group presentation. To set up, add 'data-tourme-seq' attribute to element that you want to bind its popup presentation, this attribute indicate the order of your presentation obviously (start with 1) and add 'data-tourme-content' for the presentation contents e.g.
@@ -37,5 +40,7 @@ By default, each active presentation origin element will be added a class of 'to
 By default, it will show every time but you can set the iteration count
 ```
 var $tour = new tourMe();
-$tour.start(<interation count>); <-- 0 means show everytime or the counter will reset
+$tour.start({
+	duration : 5, <-- 0 means show everytime or the counter will reset
+});
 ```

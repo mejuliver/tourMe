@@ -5,38 +5,39 @@
 	<title>TourMe</title>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<link rel="stylesheet" href="tourMe.min.css">
+	<link rel="stylesheet" href="tourMe.css">
 </head>
 <body>
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-4">
-				<h4 data-tourme-seq="1" data-tourme-top="1000" data-tourme-classes="testclas11" data-tourme-content="Tour me please 1">Tour Me please 1</h4>
+				<h4 data-tourme-seq="1" data-tourme-arrow="arrow-up" data-tourme-top="20" data-tourme-content="Tour me please 1">Tour Me please 1</h4>
 			</div>
 			<div class="col-sm-4">
-				<h4 data-tourme-seq="4" data-tourme-top="-20" data-tourme-content="Tour me please 4">Tour Me please 4</h4>
+				<h4 data-tourme-seq="4" data-tourme-arrow="arrow-down" data-tourme-top="20" data-tourme-content="Tour me please 4">Tour Me please 4</h4>
 			</div>
 			<div class="col-sm-4">
-				<h4 data-tourme-seq="5" data-tourme-left="-200" data-tourme-classes="testclas12" data-tourme-content="Tour me please 5">Tour Me please 5</h4>
+				<h4 data-tourme-seq="5" data-tourme-arrow="arrow-left" data-tourme-left="20" data-tourme-classes="testclas12" data-tourme-content="Tour me please 5">Tour Me please 5</h4>
 			</div>
 		</div>
 		<div class="row" style="margin-top:64px">
 			<div class="col-sm-8">
-				<h4 data-tourme-seq="3" data-tourme-left="200" data-tourme-content="Tour me please 3">Tour Me please 3</h4>
+				<h4 data-tourme-seq="3" data-tourme-arrow="arrow-right" data-tourme-left="20" data-tourme-content="Tour me please 3">Tour Me please 3</h4>
 			</div>
 			<div class="col-sm-4">
-				<h4 data-tourme-seq="2" data-tourme-classes="testclas190" data-tourme-top="-10" data-tourme-content="Tour me please 2">Tour Me please 2</h4>
+				<h4 data-tourme-seq="2" data-tourme-arrow="arrow-left" data-tourme-classes="testclas190" data-tourme-top="20" data-tourme-content="Tour me please 2">Tour Me please 2</h4>
 			</div>
 		</div>
 	</div>
-	<h1 data-tourme-seq="6" data-tourme-anchor="#tour6">Tour me 6</h1>
-	<div style="display:none" id="tour6">
-		Tour Me please 6
-	</div>
+	<h1 data-tourme-seq="6" data-tourme-arrow="arrow-down" data-tourme-anchor="#tour6">Tour me 6</h1>
+
 	<script src="tourMe.js"></script>
 	<script>
 		var $tour = new tourMe();
-		$tour.start(5);
+		$tour.start({
+			duration : 0,
+			arrow : true
+		});
 	</script>
 </body>
 </html>

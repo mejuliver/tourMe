@@ -2,26 +2,32 @@ function tourMe(){
   var $global = this;
   this.$arr = [];
 
-  this.start = function($duration){
+  this.start = function($options){
+    var $duration = 0;
+    var $arrow = false;
+
+    if( typeof $options != 'undefined'){
+      $duration = $options.repeat;
+      $arrow = $options.arrow;
+    }
+
     var $els = document.querySelectorAll('[data-tourme-seq]');
-    if( typeof $duration != typeof undefined ){
-      if( $duration == 0){
-        this.setCookie('tourmecookie_id',0,-665);
-      }else{
-        // get the tourme cookie first
-        var $tourme_ck = this.getCookie('tourmecookie_id');
-        if( !$tourme_ck ){ // if not found then reset it since an iteration value was given          
-          this.setCookie('tourmecookie_id',parseInt($duration),365);
-        }else{ // if there is then check the duration value and compare to the cookie
-          if( parseInt( $tourme_ck ) == 0 ){
-            return; // if same to duration then it means, iteration count must be reset, or if its 0 already then return, don't run
-          }else{
-            var $tourme_val = parseInt( $tourme_ck ) - 1; // minus 1
-            // update the value tourme cookie value
-            this.setCookie('tourmecookie_id',$tourme_val,365);
-          }
+
+    if( $duration == 0){
+      this.setCookie('tourmecookie_id',0,-665);
+    }else{
+      // get the tourme cookie first
+      var $tourme_ck = this.getCookie('tourmecookie_id');
+      if( !$tourme_ck ){ // if not found then reset it since an iteration value was given          
+        this.setCookie('tourmecookie_id',parseInt($duration),365);
+      }else{ // if there is then check the duration value and compare to the cookie
+        if( parseInt( $tourme_ck ) == 0 ){
+          return; // if same to duration then it means, iteration count must be reset, or if its 0 already then return, don't run
+        }else{
+          var $tourme_val = parseInt( $tourme_ck ) - 1; // minus 1
+          // update the value tourme cookie value
+          this.setCookie('tourmecookie_id',$tourme_val,365);
         }
-        
       }
     }
 
@@ -38,6 +44,7 @@ function tourMe(){
       var $classes = ( $els[$i].getAttribute('data-tourme-classes') == null ) ? false : $els[$i].getAttribute('data-tourme-classes');
       var $top = ( $els[$i].getAttribute('data-tourme-top') == null ) ? false : $els[$i].getAttribute('data-tourme-top');
       var $left = ( $els[$i].getAttribute('data-tourme-left') == null ) ? false : $els[$i].getAttribute('data-tourme-left');
+      var $arrow_pos = ( $els[$i].getAttribute('data-tourme-arrow') == null ) ? false : $els[$i].getAttribute('data-tourme-arrow');
       //
       this.$arr.push({ 
         id : $id,
@@ -48,7 +55,8 @@ function tourMe(){
         active : 0,
         classes : $classes,
         top : $top,
-        left : $left
+        left : $left,
+        arrow_pos : $arrow_pos
       });
 
       // sort array base on their sequence attributes
@@ -70,7 +78,13 @@ function tourMe(){
     $tourme_content.setAttribute('id','tourme-content');
 
     $data = JSON.stringify(this.$arr);
-    $tourme_content.innerHTML = "<div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div>";
+    
+    if( $arrow ){
+      $tourme_content.classList.add('with-arrow');
+      $tourme_content.innerHTML = "<div class='tourme-content-wrapper'><div class='tourme-arrow'></div><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div></div></div>";
+    }else{
+      $tourme_content.innerHTML = "<div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div>";
+    }
     document.querySelector('body').appendChild($tourme_content);
 
     this.init();
@@ -129,7 +143,7 @@ function tourMe(){
       // show the first box
       var $data = JSON.parse(document.querySelector('#tourme-data').value);
       if( document.querySelector('.tourme-pointer') !== null ){
-         document.querySelector('.tourme-pointer').classList.remove('tourme-pointer');
+        document.querySelector('.tourme-pointer').classList.remove('tourme-pointer');
       }
       // get the current active on the data
       var $curr_active = $data.findIndex(x => x.active == 1 );
@@ -140,34 +154,49 @@ function tourMe(){
           document.querySelector('#tourme-content .content').innerHTML = ( $data[$curr_active-1].content );
         }else{
           document.querySelector('#tourme-content .content').innerHTML = document.querySelector($data[$curr_active-1].anchor).innerHTML;
-        }        
+        }
 
+        if( document.querySelector('#tourme-content').classList.contains('with-arrow') ){
+          var $arrow_pos = $data[$curr_active-1].arrow_pos;
+          if( $arrow_pos ){
+            if( $arrow_pos == 'arrow-left' || $arrow_pos == 'arrow-right'){
+              var $tourme_h = document.querySelector('#tourme-content .tourme-content-container').offsetHeight;
+              document.querySelector('#tourme-content .tourme-arrow').style.top = (  $tourme_h / 2 ) - 20;
+            }else{
+              document.querySelector('#tourme-content .tourme-arrow').removeAttribute('style');
+            }
+            document.querySelector('#tourme-content').classList.remove('arrow-up','arrow-down','arrow-left','arrow-right');
+            document.querySelector('#tourme-content').classList.add($arrow_pos);
+          }
+        }
+
+        var $old_classes =  document.querySelector('#tourme-content').className;
         // add the classes if there are
         if( $data[$curr_active-1].classes ){
-          document.querySelector('#tourme-content').className =  $data[$curr_active-1].classes;
+          document.querySelector('#tourme-content').className =  $old_classes+' '+$data[$curr_active-1].classes;
         }else{
-          document.querySelector('#tourme-content').className = '';
+          document.querySelector('#tourme-content').className = $old_classes;
         }
 
         // add offset top of the element so it moves to its origin element
         // add top css
         if( !$data[$curr_active-1].top ){
-          document.querySelector('#tourme-content').style.top = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top+'px';
+          document.querySelector('#tourme-content').style.top = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top + 'px';
         }else{
           if( $data[$curr_active-1].top.indexOf('-') == -1){
-            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top + $data[$curr_active-1].top )+'px';
+            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top + parseInt(  $data[$curr_active-1].top ) ) + 'px';
           }else{
-            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top - parseInt( $data[$curr_active-1].top.replace('-','') ) )+'px';
+            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).top - parseInt( $data[$curr_active-1].top.replace('-','') ) ) + 'px';
           }
         }
         // add left css
         if( !$data[$curr_active-1].left ){
-          document.querySelector('#tourme-content').style.left = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left+'px';
+          document.querySelector('#tourme-content').style.left = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left + 'px';
         }else{
           if( $data[$curr_active-1].left.indexOf('-') == -1){
-            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left + $data[$curr_active-1].left )+'px';
+            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left + parseInt(  $data[$curr_active-1].left ) ) + 'px';
           }else{
-            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left - parseInt( $data[$curr_active-1].left.replace('-','') ) )+'px';
+            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active-1].id+'"]')).left - parseInt( $data[$curr_active-1].left.replace('-','') ) )  + 'px';
           }
         }
 
@@ -209,32 +238,49 @@ function tourMe(){
           document.querySelector('#tourme-content .content').innerHTML = document.querySelector($data[$curr_active+1].anchor).innerHTML;
         }
 
+        if( document.querySelector('#tourme-content').classList.contains('with-arrow') ){
+          var $arrow_pos = $data[$curr_active+1].arrow_pos;
+          if( $arrow_pos ){
+            if( $arrow_pos == 'arrow-left' || $arrow_pos == 'arrow-right'){
+              var $tourme_h = document.querySelector('#tourme-content .tourme-content-container').offsetHeight;
+              document.querySelector('#tourme-content .tourme-arrow').style.top = (  $tourme_h / 2 ) - 20;
+            }else{
+              document.querySelector('#tourme-content .tourme-arrow').removeAttribute('style');
+            }
+            document.querySelector('#tourme-content').classList.remove('arrow-up','arrow-down','arrow-left','arrow-right');
+            document.querySelector('#tourme-content').classList.add($arrow_pos);
+
+          }
+        }
+
+        var $old_classes =  document.querySelector('#tourme-content').className;
+
         // add the classes if there are
         if( $data[$curr_active+1].classes ){
-          document.querySelector('#tourme-content').className = $data[$curr_active+1].classes;
+          document.querySelector('#tourme-content').className = $old_classes+' '+$data[$curr_active+1].classes;
         }else{
-          document.querySelector('#tourme-content').className = '';
+          document.querySelector('#tourme-content').className = $old_classes;
         }
 
         // add offset top of the element so it moves to its origin element
         // add top css
         if( !$data[$curr_active+1].top ){
-          document.querySelector('#tourme-content').style.top = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top+'px';
+          document.querySelector('#tourme-content').style.top = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top + 'px';
         }else{
           if( $data[$curr_active+1].top.indexOf('-') == -1){
-            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top + $data[$curr_active+1].top )+'px';
+            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top + parseInt( $data[$curr_active+1].top ) ) + 'px';
           }else{
-            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top - parseInt( $data[$curr_active+1].top.replace('-','') ) )+'px';
+            document.querySelector('#tourme-content').style.top = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).top - parseInt( $data[$curr_active+1].top.replace('-','') ) ) + 'px';
           }
         }
         // add left css
         if( !$data[$curr_active+1].left ){
-          document.querySelector('#tourme-content').style.left = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left+'px';
+          document.querySelector('#tourme-content').style.left = $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left + 'px';
         }else{
           if( $data[$curr_active+1].left.indexOf('-') == -1){
-            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left + $data[$curr_active+1].left )+'px';
+            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left + parseInt(  $data[$curr_active+1].left ) ) + 'px';
           }else{
-            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left - parseInt( $data[$curr_active+1].left.replace('-','') ) )+'px';
+            document.querySelector('#tourme-content').style.left = ( $global.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[$curr_active+1].id+'"]')).left - parseInt( $data[$curr_active+1].left.replace('-','') ) ) + 'px';
           }
         }
 
@@ -270,32 +316,34 @@ function tourMe(){
     if( document.querySelector('.tourme-pointer') !== null ){
        document.querySelector('.tourme-pointer').classList.remove('tourme-pointer');
     }
+
+    var $old_classes =  document.querySelector('#tourme-content').className;
     // add the classes if there are
     if( $data[0].classes ){
-      document.querySelector('#tourme-content').className = $data[0].classes;
+      document.querySelector('#tourme-content').className = $old_classes+' '+$data[0].classes;
     }else{
-      document.querySelector('#tourme-content').className = '';
+      document.querySelector('#tourme-content').className = $old_classes;
     }
 
     // add offset top of the element so it moves to its origin element
     // add top css
     if( !$data[0].top ){
-      document.querySelector('#tourme-content').style.top = this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top+'px';
+      document.querySelector('#tourme-content').style.top = this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top + 'px';
     }else{
       if( $data[0].top.indexOf('-') == -1){
-        document.querySelector('#tourme-content').style.top = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top + $data[0].top )+'px';
+        document.querySelector('#tourme-content').style.top = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top + parseInt( $data[0].top ) ) + 'px';
       }else{
-        document.querySelector('#tourme-content').style.top = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top - parseInt( $data[0].top.replace('-','') ) )+'px';
+        document.querySelector('#tourme-content').style.top = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).top - parseInt( $data[0].top.replace('-','') ) ) + 'px';
       }
     }
     // add left css
     if( !$data[0].left ){
-      document.querySelector('#tourme-content').style.left = this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left+'px';
+      document.querySelector('#tourme-content').style.left = this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left + 'px';
     }else{
-      if( data[0].left.indexOf('-') == -1){
-        document.querySelector('#tourme-content').style.left = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left + $data[0].left )+'px';
+      if( $data[0].left.indexOf('-') == -1){
+        document.querySelector('#tourme-content').style.left = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left + parseInt( $data[0].left ) ) + 'px';
       }else{
-        document.querySelector('#tourme-content').style.left = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left - parseInt( $data[0].left.replace('-','') ) )+'px';
+        document.querySelector('#tourme-content').style.left = ( this.getOffset(document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]')).left - parseInt( $data[0].left.replace('-','') ) ) + 'px';
       }
     }
     document.querySelector('.tourMe[data-tourme-id="'+$data[0].id+'"]').classList.add('tourme-pointer');
@@ -309,6 +357,12 @@ function tourMe(){
       document.querySelector('#tourme-content .content').innerHTML = document.querySelector($data[0].anchor).innerHTML;
     }
 
+    if( document.querySelector('#tourme-content').classList.contains('with-arrow') ){
+      var $arrow_pos = $data[0].arrow_pos;
+      if( $arrow_pos ){
+        document.querySelector('#tourme-content').classList.add($arrow_pos);
+      }
+    }
     // show the tourme content
     document.querySelector('#tourme-bg').style.display = 'block';
     document.querySelector('#tourme-content').style.display = 'block';
