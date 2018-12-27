@@ -99,7 +99,7 @@
 }
 #tourme-content.arrow-up .tourme-arrow {
   top:1px;
-  left: 150;
+  left: 150px;
   width: 0; 
   height: 0; 
   border-left: 20px solid transparent;
@@ -110,7 +110,7 @@
 
 #tourme-content.arrow-down .tourme-arrow {
   bottom: 1px;
-  left: 150;
+  left: 150px;
   width: 0; 
   height: 0; 
   border-left: 20px solid transparent;
