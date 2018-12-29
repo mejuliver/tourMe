@@ -31,11 +31,15 @@
 	</div>
 	<h1 data-tourme-seq="6" data-tourme-arrow="arrow-down" data-tourme-anchor="#tour6">Tour me 6</h1>
 
+	<div style="display:none" id="tour6">
+		tourme 6
+	</div>
+
 	<script src="tourMe.js"></script>
 	<script>
 		var $tour = new tourMe();
 		$tour.start({
-			duration : 0,
+			repeat : 2,
 			arrow : true
 		});
 	</script>

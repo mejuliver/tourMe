@@ -19,14 +19,20 @@ function tourMe(){
       // get the tourme cookie first
       var $tourme_ck = this.getCookie('tourmecookie_id');
       if( !$tourme_ck ){ // if not found then reset it since an iteration value was given          
-        this.setCookie('tourmecookie_id',parseInt($duration),365);
+        this.setCookie('tourmecookie_id',JSON.stringify([parseInt($duration)-1,$duration]),365);
       }else{ // if there is then check the duration value and compare to the cookie
-        if( parseInt( $tourme_ck ) == 0 ){
+        $ck_val = JSON.parse($tourme_ck)
+        if( parseInt( $ck_val[0] ) == 0 ){
           return; // if same to duration then it means, iteration count must be reset, or if its 0 already then return, don't run
         }else{
-          var $tourme_val = parseInt( $tourme_ck ) - 1; // minus 1
-          // update the value tourme cookie value
-          this.setCookie('tourmecookie_id',$tourme_val,365);
+          if( parseInt($ck_val[1]) != parseInt($duration) ){
+            this.setCookie('tourmecookie_id',JSON.stringify([parseInt($duration)-1,$duration]),365);
+          }else{
+            var $tourme_val = parseInt( $ck_val[0] ) - 1; // minus 1
+            // update the value tourme cookie value
+            this.setCookie('tourmecookie_id',JSON.stringify([$tourme_val,$duration]),365);
+          }
+          
         }
       }
     }
