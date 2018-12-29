@@ -82,9 +82,9 @@ function tourMe(){
     
     if( $arrow ){
       $tourme_content.classList.add('with-arrow');
-      $tourme_content.innerHTML = "<div class='tourme-content-wrapper'><div class='tourme-arrow'></div><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div></div></div>";
+      $tourme_content.innerHTML = "<div class='tourme-content-wrapper'><div class='tourme-arrow'></div><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Next</a><a href='#' id='tourme-button-end'>Skip</a></div></div></div>";
     }else{
-      $tourme_content.innerHTML = "div class='tourme-content-wrapper'><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Skip</a><a href='#' id='tourme-button-end'>End</a></div></div></div>";
+      $tourme_content.innerHTML = "<div class='tourme-content-wrapper'><div class='tourme-content-container'><div class='content'></div><input type='hidden' value='"+$data+"' id='tourme-data'><div id='tourme-buttons'><a href='#' id='tourme-button-prev'>Prev</a><a href='#' id='tourme-button-next'>Next</a><a href='#' id='tourme-button-end'>Skip</a></div></div></div>";
     }
     document.querySelector('body').appendChild($tourme_content);
 

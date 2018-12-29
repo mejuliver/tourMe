@@ -56,7 +56,11 @@
   position: absolute;
   z-index: 99999;
   width: 320px;
-
+}
+@media (max-width: 768px ){
+  #tourme-content{
+    width: 290px;
+  }
 }
 .tourme-content-wrapper{
   position:relative;
@@ -77,12 +81,12 @@
 }
 .tourme-pointer {
   animation: blinker 1s linear infinite;
-  border: 1px solid transparent;
+  border: 2px dashed transparent;
 }
 
 @keyframes blinker {
   50% {
-    border-color: red;
+    border-color: #FFF;
   }
 }
 #tourme-content.arrow-up .tourme-content-wrapper{
